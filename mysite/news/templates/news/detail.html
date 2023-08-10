@@ -1,0 +1,27 @@
+{% extends 'layouts/main.html' %}
+{% block title %} {{ article.title }} {% endblock %}
+
+{% block content %}
+    <div>
+        <h3>{{ article.title }}</h3>
+        <div>
+            {{ article.content|safe|linebreaks }}
+        </div>
+    <img src="{{ article.image.url }}">
+    {% for comment in article.comment_set.all %}
+        <div>
+            <h5>{{ comment.author }}</h5>
+            <p>{{ comment.content }}</p>
+            <span>{{ comment.created_at }}</span>
+        </div>
+    {% endfor %}
+    {% if user.username %}
+        <form action="{% url 'news:detail' article.id %}" method="post">
+            {% csrf_token %}
+            <label>Comment</label>
+            {{ form.content}}
+            <input type="submit" value="Add comment">
+        </form>
+    {% endif %}
+    </div>
+{% endblock %}

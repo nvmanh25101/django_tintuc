@@ -1,0 +1,27 @@
+{% extends 'layouts/main.html' %}
+{% block title %} Home {% endblock %}
+{% block content %}
+    {% if user.is_authenticated %}
+        <p>Welcome, {{ user.username }}. Thanks for logging in.</p>
+        <p><a href="{% url 'news:logout' %}">Log out</a></p>
+    {% else %}
+        <a href="{% url 'news:signup' %}">Sign Up</a>
+        <a href="{% url 'news:login' %}">Sign In</a>
+    {% endif %}
+
+    {% if latest_article_list %}
+        <ul>
+            {% for article in latest_article_list %}
+                <li>
+                    <a href="{% url 'news:detail' article.id %}">{{ article.title }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No news are available.</p>
+    {% endif %}
+    <br>
+    {%  if page_obj.has_next %}
+        <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">Continues</a>
+    {% endif %}
+{% endblock %}
